@@ -1,5 +1,16 @@
-# Server 
+# Node
+node_modules/
 
-# Database
+#Environment files
+.env
 
-# Environnement
+# Logs
+logs/
+*.log
+
+# Editor
+.vscode/
+.DS_Store
+
+#Build
+dist/
