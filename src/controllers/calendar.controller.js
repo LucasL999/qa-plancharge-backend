@@ -1,6 +1,7 @@
 export const getAllCalendarEvents = (req, res) => {
   res.json([
-    { id: 1, name: "Calendar Event Alpha" }
+    { id: 1, name: "Calendar Event Alpha" },
+    { id: 2, name: "Calendar Event Beta" }
   ]);
 };
 
