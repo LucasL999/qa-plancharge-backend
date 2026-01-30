@@ -1,21 +1,21 @@
 import { getAllChantiers, createChantier, updateChantier, getChantierById } from '../services/chantier.service.js';
 
-export const getAllChantiers = (req, res) => {
+export const getAll = (req, res) => {
   res.json(getAllChantiers());
 };
 
-export const getChantierById = (req, res) => {
+export const getById = (req, res) => {
   const { id } = req.params;
   res.json(getChantierById(id));
 };
 
-export const createChantier = (req, res) => {
+export const create = (req, res) => {
   const chantierData = req.body;
   const newChantier = createChantier(chantierData);
   res.status(201).json(newChantier);
 };
 
-export const updateChantier = (req, res) => {
+export const update = (req, res) => {
   const { id } = req.params;
   const chantierData = req.body;
   const updatedChantier = updateChantier(id, chantierData);

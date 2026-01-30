@@ -8,25 +8,25 @@ const router = Router();
 router.get('/calendar', 
     mockAuth, 
     authorize('manager', 'qa'), 
-    controller.getAllCalendarEvents
+    controller.getAll
 );
 
 router.post('/calendar', 
     mockAuth, 
     authorize('manager', 'qa'), 
-    controller.createCalendarEvent
+    controller.create
 );
 
 router.get('/calendar/:id', 
     mockAuth, 
     authorize('manager', 'qa'), 
-    controller.getCalendarEventById
+    controller.getById
 );
 
 router.put('/calendar/:id', 
     mockAuth, 
     authorize('manager', 'qa'), 
-    controller.updateCalendarEvent
+    controller.update
 );
 
 export default router;

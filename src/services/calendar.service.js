@@ -1,4 +1,4 @@
-import { pool } from '../db/index.js';
+import pool from '../db/index.js';
 
 //* repplace actual function with database logic when DB is ready
 

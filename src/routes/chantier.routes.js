@@ -8,25 +8,25 @@ const router = Router();
 router.get('/chantiers', 
     mockAuth, 
     authorize('manager', 'qa'), 
-    controller.getAllChantiers
+    controller.getAll
 );
 
 router.post('/chantiers', 
     mockAuth, 
     authorize('manager', 'qa'), 
-    controller.createChantier
+    controller.create
 );
 
 router.get('/chantiers/:id', 
     mockAuth, 
     authorize('manager', 'qa'), 
-    controller.getChantierById
+    controller.getById
 );
 
 router.put('/chantiers/:id', 
     mockAuth, 
     authorize('manager', 'qa'), 
-    controller.updateChantier
+    controller.update
 );
 
 export default router;
