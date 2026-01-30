@@ -1,13 +1,12 @@
+import { getAllCalendarEvents, createCalendarEvent, updateCalendarEvent, getCalendarEventById } from '../services/calendar.service.js';
+
 export const getAllCalendarEvents = (req, res) => {
-  res.json([
-    { id: 1, name: "Calendar Event Alpha" },
-    { id: 2, name: "Calendar Event Beta" }
-  ]);
+  res.json(getAllCalendarEvents());
 };
 
 export const getCalendarEventById = (req, res) => {
   const { id } = req.params;
-  res.json({ id, name: "Calendar Event Alpha" });
+  res.json(getCalendarEventById(id));
 };
 
 export const createCalendarEvent = (req, res) => {
