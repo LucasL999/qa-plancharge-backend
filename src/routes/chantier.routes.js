@@ -1,31 +1,31 @@
 import { Router } from 'express';
-import { mockAuth } from '../middlewares/auth.middleware.js';
+import verifyToken from '../middlewares/auth.middleware.js';
 import { authorize } from '../middlewares/roles.middleware.js';
 import * as controller from '../controllers/chantier.controller.js';
 
 const router = Router();
 
 router.get('/chantiers', 
-    mockAuth, 
-    authorize('manager', 'qa'), 
+    verifyToken, 
+    authorize('manager', 'QA'), 
     controller.getAll
 );
 
 router.post('/chantiers', 
-    mockAuth, 
-    authorize('manager', 'qa'), 
+    verifyToken, 
+    authorize('manager', 'QA'), 
     controller.create
 );
 
 router.get('/chantiers/:id', 
-    mockAuth, 
-    authorize('manager', 'qa'), 
+    verifyToken, 
+    authorize('manager', 'QA'), 
     controller.getById
 );
 
 router.put('/chantiers/:id', 
-    mockAuth, 
-    authorize('manager', 'qa'), 
+    verifyToken, 
+    authorize('manager', 'QA'), 
     controller.update
 );
 

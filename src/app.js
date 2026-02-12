@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-
-import registerRoutes from './routes/index.routes.js';
+import routes from "./routes/index.routes.js";
+import verifyToken from "./middlewares/auth.middleware.js";
 
 const app = express();
 
@@ -12,6 +12,6 @@ app.get("/health", (req, res) => {
     res.json({ status: "ok" });
 });
 
-registerRoutes(app);
+app.use(routes, verifyToken);
 
 export default app;
