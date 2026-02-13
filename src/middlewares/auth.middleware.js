@@ -2,11 +2,10 @@ import 'dotenv/config';
 import { jwtVerify, createRemoteJWKSet } from 'jose';
 import pool from '../db/index.js';
 
-const issuer = process.env.KEYCLOAK_ISSUER; // p.ex. https://kc.example.com/realms/monrealm
+const issuer = process.env.KEYCLOAK_ISSUER;
 const jwksUri = new URL(`${issuer}/protocol/openid-connect/certs`);
 const JWKS = createRemoteJWKSet(jwksUri);
 
-// Optionnel : valider l’audience si tu en utilises une
 const expectedAud = process.env.KEYCLOAK_AUDIENCE; // client-id côté Keycloak (resource / client)
 
 export default async function verifyToken(req, res, next) {
@@ -21,11 +20,9 @@ export default async function verifyToken(req, res, next) {
     // 1) Vérification du token (issuer, exp, signature, aud)
     const { payload, protectedHeader } = await jwtVerify(token, JWKS, {
       issuer,
-      audience: expectedAud || undefined, // mets une valeur si tu veux durcir
+      audience: expectedAud || undefined,
     });
 
-    // Logs utiles en dev
-    // console.debug('Header alg:', protectedHeader?.alg, 'sub:', payload?.sub);
 
     // 2) Extraire un email fiable
     const emailFromToken =
@@ -37,7 +34,7 @@ export default async function verifyToken(req, res, next) {
       return res.status(400).json({ error: 'Email manquant dans le token' });
     }
 
-    // Optionnel : n’autoriser que les emails vérifiés
+    // n’autoriser que les emails vérifiés
     if (payload.email && payload.email_verified === false) {
       return res.status(403).json({ error: 'Email non vérifié' });
     }
@@ -52,7 +49,6 @@ export default async function verifyToken(req, res, next) {
     );
 
     if (result.rows.length === 0) {
-      // IMPORTANT: ne pas appeler next() ici
       return res.status(403).json({ error: 'Utilisateur non autorisé' });
     }
 
@@ -65,7 +61,6 @@ export default async function verifyToken(req, res, next) {
       resourceAccess: payload.resource_access || {},
     };
 
-    // console.log('Utilisateur authentifié:', req.user);
     return next();
 
   } catch (err) {
