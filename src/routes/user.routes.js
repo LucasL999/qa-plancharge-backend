@@ -30,4 +30,18 @@ router.get("/me", authMiddleware, async (req, res) => {
   }
 });
 
+/**
+ * GET /api/roles
+ */
+router.get("/roles", authMiddleware, async (req, res) => {
+    try {
+        const roles = await userService.getRoles();
+        res.json(roles);
+    } catch (error) {
+        console.error("Error fetching roles:", error);
+        res.status(500).json({ error: "Failed to fetch roles" });
+    }
+});
+
+
 export default router;

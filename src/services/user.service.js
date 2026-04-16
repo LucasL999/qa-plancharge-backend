@@ -8,5 +8,13 @@ export const userService = {
     );
 
     return result.rows[0]; // undefined si pas trouvé
-  }
+  },
+
+   async getRoles() {
+    const result = await pool.query(
+      "SELECT * FROM role",
+
+    );
+    return result.rows; // retourne un tableau de rôles id, libelle
+    }
 };
