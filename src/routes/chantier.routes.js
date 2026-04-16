@@ -1,32 +1,20 @@
-import { Router } from 'express';
-import verifyToken from '../middlewares/auth.middleware.js';
-import { authorize } from '../middlewares/roles.middleware.js';
-import * as controller from '../controllers/chantier.controller.js';
+import express from "express";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { chantierService } from "../services/chantier.service.js";
 
-const router = Router();
+const router = express.Router();
 
-router.get('/chantiers', 
-    verifyToken, 
-    authorize('manager', 'QA'), 
-    controller.getAll
-);
-
-router.post('/chantiers', 
-    verifyToken, 
-    authorize('manager', 'QA'), 
-    controller.create
-);
-
-router.get('/chantiers/:id', 
-    verifyToken, 
-    authorize('manager', 'QA'), 
-    controller.getById
-);
-
-router.put('/chantiers/:id', 
-    verifyToken, 
-    authorize('manager', 'QA'), 
-    controller.update
-);
+/**
+ * GET /api/chantier/statuts
+ */
+router.get("/statuts", authMiddleware, async (req, res) => {
+    try {
+        const status = await chantierService.getChantierStatus();
+        res.json(status);
+    } catch (error) {
+        console.error("Error fetching chantier status:", error);
+        res.status(500).json({ error: "Failed to fetch chantier status" });
+    }
+});
 
 export default router;

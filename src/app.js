@@ -1,17 +1,24 @@
 import express from "express";
 import cors from "cors";
-import routes from "./routes/index.routes.js";
-import verifyToken from "./middlewares/auth.middleware.js";
+import userRoutes from "./routes/user.routes.js";
+import chantierRoutes from "./routes/chantier.routes.js";
 
 const app = express();
 
-app.use(cors());
 app.use(express.json());
 
-app.get("/health", (req, res) => {
-    res.json({ status: "ok" });
-});
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true
+  })
+);
 
-app.use(routes, verifyToken);
+app.use("/api", userRoutes);
+app.use("/api", chantierRoutes);
+
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
+});
 
 export default app;
