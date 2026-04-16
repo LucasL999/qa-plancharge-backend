@@ -10,11 +10,18 @@ export const userService = {
     return result.rows[0]; // undefined si pas trouvé
   },
 
-   async getRoles() {
+  async getRoles() {
     const result = await pool.query(
       "SELECT * FROM role",
 
     );
     return result.rows; // retourne un tableau de rôles id, libelle
-    }
+  },
+
+  async getAllUsers() {
+    const result = await pool.query(
+      "SELECT id_user, name, firstname, email, role FROM users ORDER BY name ASC"
+    );
+    return result.rows;
+  },
 };

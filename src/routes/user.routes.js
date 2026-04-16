@@ -43,5 +43,20 @@ router.get("/roles", authMiddleware, async (req, res) => {
     }
 });
 
+/**
+ * GET /api/users
+ */
+router.get("/users", authMiddleware, async (req, res) => {
+    try {
+        const users = await userService.getAllUsers();
+        res.json(users);
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).json({ error: "Failed to fetch users" });
+    }
+});
+
+
+
 
 export default router;
