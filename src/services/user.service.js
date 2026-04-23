@@ -20,7 +20,7 @@ export const userService = {
 
   async getAllUsers() {
     const result = await pool.query(
-      "SELECT id_user, name, firstname, email, role, libelle FROM users, role WHERE users.role = role.id_role ORDER BY name ASC"
+      "SELECT id_user, name, firstname, email, nbused, role, libelle FROM users JOIN role ON users.role = role.id_role ORDER BY name ASC"
     );
     return result.rows;
   },
