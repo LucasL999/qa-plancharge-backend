@@ -63,7 +63,7 @@ router.post("/users", authMiddleware, async (req, res) => {
     try {
         const { nom, prenom, id_role, absences, email } = req.body;
         const user = await userService.addUser(nom, prenom, id_role, absences, email);
-        res.status(201).json(user);
+        res.status(201).json({ success: true, data: user });
     } catch (error) {
         console.error("Error adding user:", error);
         res.status(500).json({ error: "Failed to add user" });
