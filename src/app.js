@@ -3,6 +3,7 @@ import cors from "cors";
 import userRoutes from "./routes/user.routes.js";
 import chantierRoutes from "./routes/chantier.routes.js";
 import teamRoutes from "./routes/team.routes.js";
+import dashboardRoutes from "./routes/dashboard.routes.js";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(
 app.use("/api", userRoutes);
 app.use("/api", chantierRoutes);
 app.use("/api", teamRoutes);
+app.use("/api", dashboardRoutes)
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
