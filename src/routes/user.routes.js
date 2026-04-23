@@ -45,6 +45,7 @@ router.get("/roles", authMiddleware, async (req, res) => {
 
 /**
  * GET /api/users
+ * GET all users with their role (libelle)
  */
 router.get("/users", authMiddleware, async (req, res) => {
     try {
@@ -58,6 +59,7 @@ router.get("/users", authMiddleware, async (req, res) => {
 
 /**
  * POST /api/users
+ * ADD user
  */
 router.post("/users", authMiddleware, async (req, res) => {
     try {
@@ -69,6 +71,22 @@ router.post("/users", authMiddleware, async (req, res) => {
         res.status(500).json({ error: "Failed to add user" });
     }
 });
+
+/**
+ * PUT /api/users/:id_user
+ * EDIT user
+ */
+router.put("/users/:id_user", authMiddleware, async (req, res) => {
+    try {
+        const { id_user, nom, prenom, id_role, absences, email } = req.body;
+        const user = await userService.updateUser(id_user, nom, prenom, id_role, absences, email);
+        res.status(200).json({ success: true, data: user });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).json({ error: "Failed to update user" });
+    }
+});
+
 
 
 
