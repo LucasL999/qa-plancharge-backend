@@ -9,5 +9,11 @@ export const chantierService = {
   async getChantierPriority(){
       const result = await pool.query("SELECT * FROM priorite;");
       return result.rows; // retourne un tableau de priorités id, libelle
-  }
+  },
+
+  async getQA() {
+    const result = await pool.query("SELECT id_user, name, firstname FROM users WHERE role = 1 ORDER BY name ASC;");
+    console.log(result)
+    return result.rows; // retourne un tableau de QA
+  },
 };

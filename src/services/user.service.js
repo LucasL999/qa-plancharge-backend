@@ -27,7 +27,7 @@ export const userService = {
 
   async addUser(nom, prenom, id_role, absences, email) {
     const result = await pool.query(
-      "INSERT INTO users (name, firstname, role, nbannual, nbused, email) VALUES ($1, $2, $3, $4, 0, $5) RETURNING *"
+      "INSERT INTO users (name, firstname, role, nbannual, nbused, email) VALUES ($1, $2, $3, 0, $4, $5) RETURNING *"
       , [
         
         nom, prenom, id_role, absences, email]

@@ -29,5 +29,19 @@ router.get("/priorites", authMiddleware, async (req, res) => {
     }
 });
 
+/**
+ * GET /api/newChantierQA
+ */
+router.get("/newChantierQA", authMiddleware, async (req, res) => {
+    try {
+        const result = await chantierService.getQA();
+        res.json(result);
+    } catch (error) {
+        console.error("Error fetching chantier QA:", error);
+        res.status(500).json({ error: "Failed to fetch chantier QA" });
+    }
+});
+
+
 
 export default router;
