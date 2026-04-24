@@ -87,6 +87,22 @@ router.put("/users/:id_user", authMiddleware, async (req, res) => {
     }
 });
 
+/**
+ * DELETE /api/users/:id_user
+ * DELETE user
+ */
+router.delete("/deleteUser/:id_user", authMiddleware, async (req, res) => {
+    try {
+        const { id_user } = req.params;
+        const result = await userService.deleteUsers(id_user);
+        res.json(result);
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        res.status(500).json({ error: "Failed to delete user" });
+    }
+});
+
+
 
 
 

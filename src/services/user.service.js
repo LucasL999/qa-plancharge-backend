@@ -42,4 +42,11 @@ export const userService = {
     );
     return result.rows[0];
   },
+
+  async deleteUsers(id_user) {
+    const result = await pool.query(
+      "DELETE FROM users WHERE id_user = $1;", [id_user]
+    );
+    return result.rows;
+  },
 };
