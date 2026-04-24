@@ -17,6 +17,19 @@ router.get("/qa", authMiddleware, async (req, res) => {
     }
 });
 
+/**
+ * GET /api/nbQA
+ */
+router.get("/nbQA", authMiddleware, async (req, res) => {
+    try {
+        const nb = await teamService.getNbQA();
+        res.json(nb);
+    } catch (error) {
+        console.error("Error fetching nb QA:", error);
+        res.status(500).json({ error: "Failed to fetch nb QA" });
+    }
+});
+
 
 
 export default router;

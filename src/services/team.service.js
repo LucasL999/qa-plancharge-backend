@@ -6,5 +6,10 @@ export const teamService = {
     return result.rows; // retourne un tableau de QAs
   },
 
+  async getNbQA() {
+    const result = await pool.query("SELECT COUNT(*) FROM users WHERE role = 1;"); //récupère les QAs (role = 1)
+    return result.rows; // retourne un tableau de QAs
+  },
+
 
 };

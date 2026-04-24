@@ -66,9 +66,14 @@ router.post("/users", authMiddleware, async (req, res) => {
         const { nom, prenom, id_role, absences, email } = req.body;
         const user = await userService.addUser(nom, prenom, id_role, absences, email);
         res.status(201).json({ success: true, data: user });
-    } catch (error) {
-        console.error("Error adding user:", error);
-        res.status(500).json({ error: "Failed to add user" });
+    } catch (err) {
+        if(err.message === "EMAIL_ALREADY_EXISTS"){
+            return res.status(409).json({
+                error: "EMAIL_ALREADY_EXITS"
+            });
+        } 
+        console.error(err);
+        res.status(500).json({ error: "Erreur serveur"});
     }
 });
 

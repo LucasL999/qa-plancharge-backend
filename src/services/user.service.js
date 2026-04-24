@@ -26,6 +26,10 @@ export const userService = {
   },
 
   async addUser(nom, prenom, id_role, absences, email) {
+    const isEmailUsed = await pool.query("SELECT id_user FROM users WHERE email = $1;", [email]);
+    if(isEmailUsed.rowCount > 0){
+      throw new Error("EMAIL_ALREADY_EXISTS");
+    }
     const result = await pool.query(
       "INSERT INTO users (name, firstname, role, nbannual, nbused, email) VALUES ($1, $2, $3, 0, $4, $5) RETURNING *"
       , [
