@@ -22,4 +22,17 @@ export const calendarService = {
     return result.rows;
   },
 
+  async deleteEvent(email, date_debut, date_fin) {
+    const resultUser = await pool.query("SELECT id_user FROM users WHERE email = $1;", [email]);
+    if(resultUser.rows.length === 0){
+        throw new Error("Utilisateur introuvable");
+    }
+    const idUser = resultUser.rows[0].id_user;
+    const result = await pool.query(
+      "DELETE FROM events WHERE id_user = $1 AND (date_debut = $2 OR date_fin = $3)  ",
+      [idUser, date_debut, date_fin]
+    );
+    return result.rows;
+  },
+
 };
