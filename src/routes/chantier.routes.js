@@ -73,12 +73,12 @@ router.get("/getChantier", authMiddleware, async (req, res) => {
 /**
  * PUT /api/updateChantier
  * EDIT chantier
- * a finir lorsque l'import de l'excel seroa OK :service
+ * a finir lorsque l'import de l'excel sera OK :service
  */
 router.put("/updateChantier", authMiddleware, async (req, res) => {
     try {
-        const { chantier, priorite, statut, qa, cp, financement, nature, capacite, prev, cons, debut, fin } = req.body;
-        const result = await chantierService.updateChantier(chantier, priorite, statut, qa, cp, financement, nature, capacite, prev, cons, debut, fin);
+        const { id, priorite, statut, qa, cp, financement, nature, capacite, prev, cons, debut, fin } = req.body;
+        const result = await chantierService.updateChantier( id, priorite, statut, qa, cp, financement, nature, capacite, prev, cons, debut, fin);
         res.status(200).json({ success: true, data: result });
     } catch (error) {
         console.error("Error updating chantier:", error);

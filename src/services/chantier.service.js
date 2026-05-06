@@ -76,4 +76,41 @@ export const chantierService = {
     console.log(result)
     return result.rows; // retourne un tableau de QA
   },
+
+  async updateChantier(id, priorite, statut, qa, cp, financement, nature, capacite, prev, cons, debut, fin) {
+    
+    try{
+      await pool.query('BEGIN');
+      await pool.query(
+        `UPDATE chantier SET id_statut = $1 ,
+          cp = $2,
+          date_debut = $3,
+          date_fin = $4,
+          prev = $5,
+          cons = $6,
+          finance = $7,
+          capacite = $8,
+          id_priorite = $9,
+          nature = $10
+          WHERE id_chantier = $11;`
+        , [ 
+        statut, cp, debut, fin, prev, cons, financement, capacite, priorite, nature, id]
+      );
+      await pool.query(
+        `DELETE FROM affecter WHERE id_chantier = $1;`
+        ,[id]
+      )
+      for (const idUser of qa){
+        await pool.query(
+          "INSERT INTO affecter (id_chantier, id_user) VALUES($1, $2) RETURNING *"
+          , [id, idUser]
+        );
+      }
+      await pool.query('COMMIT');
+      return id;
+    }catch (error){
+      await pool.query('ROLLBACK');
+      throw error;
+    }
+  },
 };
