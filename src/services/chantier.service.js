@@ -47,6 +47,7 @@ export const chantierService = {
       c.id_chantier,
       c.titre,
       s.libelle AS stat,
+      s.id_statut,
       c.cp,
       c.date_debut,
       c.date_fin,
@@ -55,6 +56,7 @@ export const chantierService = {
       c.finance,
       c.capacite,
       p.libelle AS prio,
+      p.id_priorite,
       c.nature,
       JSON_AGG(
         JSONB_BUILD_OBJECT(
@@ -69,8 +71,8 @@ export const chantierService = {
       LEFT JOIN affecter a ON c.id_chantier = a.id_chantier
       LEFT JOIN users u ON a.id_user = u.id_user
       GROUP BY
-        c.id_chantier, c.titre, s.libelle, c.cp, c.date_debut, c.date_fin,
-        c.prev, c.cons, c.finance, c.capacite, p.libelle, c.nature;`);
+        c.id_chantier, c.titre, s.libelle, s.id_statut, c.cp, c.date_debut, c.date_fin,
+        c.prev, c.cons, c.finance, c.capacite, p.libelle, p.id_priorite, c.nature;`);
     console.log(result)
     return result.rows; // retourne un tableau de QA
   },
