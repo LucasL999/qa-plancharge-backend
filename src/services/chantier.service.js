@@ -113,4 +113,14 @@ export const chantierService = {
       throw error;
     }
   },
+
+  async getPrev(){
+      const result = await pool.query("SELECT SUM(prev) FROM chantier WHERE id_statut = 2 OR id_statut = 3;");
+      return result.rows; // retourne le total prev
+  },
+
+  async getCons(){
+      const result = await pool.query("SELECT SUM(cons) FROM chantier WHERE id_statut = 2 OR id_statut = 3;");
+      return result.rows; // retourne le total cons
+  },
 };

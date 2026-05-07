@@ -65,7 +65,7 @@ router.get("/getChantier", authMiddleware, async (req, res) => {
         const result = await chantierService.getChantier();
         res.json(result);
     } catch (error) {
-        console.error("Error fetching chantier Chantier:", error);
+        console.error("Error fetching Chantier:", error);
         res.status(500).json({ error: "Failed to fetch Chantier" });
     }
 });
@@ -83,6 +83,32 @@ router.put("/updateChantier", authMiddleware, async (req, res) => {
     } catch (error) {
         console.error("Error updating chantier:", error);
         res.status(500).json({ error: "Failed to update chantier" });
+    }
+});
+
+/**
+ * GET /api/prev
+ */
+router.get("/prev", authMiddleware, async (req, res) => {
+    try {
+        const result = await chantierService.getPrev();
+        res.json(result);
+    } catch (error) {
+        console.error("Error fetching Prévisionnel:", error);
+        res.status(500).json({ error: "Failed to fetch Prévisionnel" });
+    }
+});
+
+/**
+ * GET /api/cons
+ */
+router.get("/cons", authMiddleware, async (req, res) => {
+    try {
+        const result = await chantierService.getCons();
+        res.json(result);
+    } catch (error) {
+        console.error("Error fetching Consommé:", error);
+        res.status(500).json({ error: "Failed to fetch Consommé" });
     }
 });
 
