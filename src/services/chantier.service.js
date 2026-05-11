@@ -72,7 +72,8 @@ export const chantierService = {
       LEFT JOIN users u ON a.id_user = u.id_user
       GROUP BY
         c.id_chantier, c.titre, s.libelle, s.id_statut, c.cp, c.date_debut, c.date_fin,
-        c.prev, c.cons, c.finance, c.capacite, p.libelle, p.id_priorite, c.nature;`);
+        c.prev, c.cons, c.finance, c.capacite, p.libelle, p.id_priorite, c.nature
+      ORDER BY c.titre;`);
     console.log(result)
     return result.rows; // retourne un tableau de QA
   },
@@ -102,7 +103,7 @@ export const chantierService = {
       )
       for (const idUser of qa){
         await pool.query(
-          "INSERT INTO affecter (id_chantier, id_user) VALUES($1, $2) RETURNING *"
+          "INSERT INTO affecter (id_chantier, id_user) VALUES($1, $2)"
           , [id, idUser]
         );
       }
