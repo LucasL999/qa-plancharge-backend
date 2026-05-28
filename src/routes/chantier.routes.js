@@ -112,6 +112,32 @@ router.get("/cons", authMiddleware, async (req, res) => {
     }
 });
 
+/**
+ * GET /api/alertes
+ */
+router.get("/alertes", authMiddleware, async (req, res) => {
+    try {
+        const result = await chantierService.getAlertes();
+        res.json(result);
+    } catch (error) {
+        console.error("Error fetching Alertes:", error);
+        res.status(500).json({ error: "Failed to fetch Alertes" });
+    }
+});
+
+/**
+ * GET /api/Nbalertes
+ */
+router.get("/Nbalertes", authMiddleware, async (req, res) => {
+    try {
+        const result = await chantierService.getNbAlertes();
+        res.json(result);
+    } catch (error) {
+        console.error("Error fetching Nb Alertes:", error);
+        res.status(500).json({ error: "Failed to fetch Nb Alertes" });
+    }
+});
+
 
 
 export default router;
