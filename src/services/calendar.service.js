@@ -30,6 +30,9 @@ export const calendarService = {
         throw new Error("Utilisateur introuvable");
     }
     const idUser = resultUser.rows[0].id_user;
+    const resultnbJours = await pool.query("SELECT (date_fin - date_debut) +1 AS nb_jours FROM events WHERE id_user = $1 AND (date_debut = $2 OR date_fin = $3)", [idUser, date_debut, date_fin]);
+    const nbJours = resultnbJours.rows[0]?.nb_jours || 0;
+    const addJours = await pool.query("UPDATE users SET nbrestant = nbrestant + $1 WHERE id_user = $2", [nbJours, idUser]);
     const result = await pool.query(
       "DELETE FROM events WHERE id_user = $1 AND (date_debut = $2 OR date_fin = $3)  ",
       [idUser, date_debut, date_fin]

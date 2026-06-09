@@ -31,7 +31,7 @@ export const userService = {
       throw new Error("EMAIL_ALREADY_EXISTS");
     }
     const result = await pool.query(
-      "INSERT INTO users (name, firstname, role, nbannual, nbrestant, email) VALUES ($1, $2, $3, 0, $4, $5) RETURNING *"
+      "INSERT INTO users (name, firstname, role, nbannual, nbrestant, email) VALUES ($1, $2, $3, $4, $4, $5) RETURNING *"
       , [
         
         nom, prenom, id_role, absences, email]
