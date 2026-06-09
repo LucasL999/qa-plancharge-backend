@@ -36,6 +36,17 @@ router.get("/events", authMiddleware, async (req, res) => {
     }
 });
 
+router.get("/eventsOther", authMiddleware, async (req, res) => {
+    try {
+        const email = req.user.email;
+        const event = await calendarService.getEventOther(email);
+        res.status(201).json({ success: true, data: event });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erreur serveur"});
+    }
+});
+
 /**
  * DELETE /api/deleteEvent
  * DELETE event

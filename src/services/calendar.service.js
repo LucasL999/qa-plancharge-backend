@@ -24,6 +24,14 @@ export const calendarService = {
     return result.rows;
   },
 
+  async getEventOther(email) {
+    const result = await pool.query(
+      "SELECT firstname, name, date_debut, date_fin FROM events JOIN users ON users.id_user = events.id_user WHERE users.email != $1",
+      [email]
+    );
+    return result.rows;
+  },
+
   async deleteEvent(email, date_debut, date_fin) {
     const resultUser = await pool.query("SELECT id_user FROM users WHERE email = $1;", [email]);
     if(resultUser.rows.length === 0){
