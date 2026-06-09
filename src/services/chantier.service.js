@@ -194,12 +194,12 @@ export const chantierService = {
 },
 
   async getPrev(){
-      const result = await pool.query("SELECT SUM(prev) FROM chantier WHERE id_statut = 2 OR id_statut = 3;");
+      const result = await pool.query("SELECT SUM(prev) FROM chantier;");
       return result.rows; // retourne le total prev
   },
 
   async getCons(){
-      const result = await pool.query("SELECT SUM(cons) FROM chantier WHERE id_statut = 2 OR id_statut = 3;");
+      const result = await pool.query("SELECT SUM(cons) FROM chantier;");
       return result.rows; // retourne le total cons
   },
 
