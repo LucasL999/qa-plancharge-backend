@@ -148,8 +148,17 @@ export const chantierService = {
 
     // ✅ 🔥 logique alerte EXACTE DEMANDÉE
     const STATUT_CLOS = "1"; // adapte si besoin
+    
+    if (statut == STATUT_CLOS) {
+      await pool.query(
+        `DELETE FROM alerte WHERE id_chantier = $1`,
+        [id]
+      );
+      return;
+    }
 
-    if (Number(cons) > Number(prev) && statut !== STATUT_CLOS) {
+
+    if (Number(cons) > Number(prev)) {
       
       // vérifier si alerte existe déjà
       const check = await pool.query(
