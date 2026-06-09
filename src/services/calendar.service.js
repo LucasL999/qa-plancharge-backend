@@ -7,6 +7,8 @@ export const calendarService = {
         throw new Error("Utilisateur introuvable");
     }
     const idUser = resultUser.rows[0].id_user;
+    const nbJours = Number((new Date(date_fin) - new Date(date_debut)) / (1000 * 60 * 60 * 24) + 1);
+    const resultJours = await pool.query("UPDATE users set nbrestant = nbrestant - $1 WHERE id_user = $2", [nbJours, idUser]);
     const result = await pool.query(
       "INSERT INTO events (id_user, date_debut, date_fin) VALUES ($1, $2, $3) RETURNING *"
       , [idUser, date_debut, date_fin]
