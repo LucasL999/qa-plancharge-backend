@@ -5,6 +5,7 @@ import chantierRoutes from "./routes/chantier.routes.js";
 import teamRoutes from "./routes/team.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
 import calendarRoutes from "./routes/calendar.routes.js";
+import exportExcelRoutes from "./routes/exportExcel.routes.js";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api", chantierRoutes);
 app.use("/api", teamRoutes);
 app.use("/api", dashboardRoutes)
 app.use("/api", calendarRoutes);
+app.use("/api", exportExcelRoutes);
 
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
