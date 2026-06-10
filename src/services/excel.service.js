@@ -105,27 +105,73 @@ async function exportExcel(req, res) {
     const totalRow = lastRow + 3;
 
     worksheet.getCell(`J${totalRow}`).value = "Charge globale";
+    worksheet.getCell(`J${totalRow}`).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF808080' }
+    };
     worksheet.getCell(`J${totalRow}`).font = { bold: true };
     worksheet.getColumn("J").width = 20;
     worksheet.getCell(`J${totalRow + 1}`).value = { formula: `SUM(J2:J${data.length + 1})`, result: 0 };
+    worksheet.getCell(`J${totalRow + 1}`).font = { bold: true, color: { argb: 'FF808080' } };
 
     worksheet.getCell(`K${totalRow}`).value = "Consommation globale";
+    worksheet.getCell(`K${totalRow}`).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFFF0000' }
+    };
     worksheet.getCell(`K${totalRow}`).font = { bold: true };
     worksheet.getColumn("K").width = 30;
     worksheet.getCell(`K${totalRow + 1}`).value = { formula: `SUM(K2:K${data.length + 1})`, result: 0 };
+    worksheet.getCell(`K${totalRow + 1}`).font = { bold: true, color: { argb: 'FFFF0000' } };
 
     worksheet.getCell(`L${totalRow}`).value = "RAF global";
+    worksheet.getCell(`L${totalRow}`).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF008000' }
+    };
     worksheet.getCell(`L${totalRow}`).font = { bold: true };
     worksheet.getColumn("L").width = 20;
     worksheet.getCell(`L${totalRow + 1}`).value = { formula: `SUM(L2:L${data.length + 1})`, result: 0 };
-
-    worksheet.getCell(`K${totalRow + 4}`).value = "Total capacitaire";
-    worksheet.getCell(`K${totalRow + 4}`).font = { bold: true };
-    worksheet.getCell(`K${totalRow + 5}`).value = { formula: `QAs!H2`, result: 0 };
+    worksheet.getCell(`L${totalRow + 1}`).font = { bold: true, color: { argb: 'FF008000' } };
 
     worksheet.getCell(`J${totalRow + 4}`).value = "Delta";
     worksheet.getCell(`J${totalRow + 4}`).font = { bold: true };
     worksheet.getCell(`J${totalRow + 5}`).value = { formula: `K${totalRow + 5} - L${totalRow + 1}`, result: 0 };
+    worksheet.getCell(`J${totalRow + 4}`).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFFFF5A5' }
+    };
+
+    worksheet.getCell(`L${totalRow + 4}`).value = "Total capacitaire";
+    worksheet.getCell(`L${totalRow + 4}`).font = { bold: true };
+    worksheet.getCell(`L${totalRow + 5}`).value = { formula: `QAs!H2`, result: 0 };
+    worksheet.getCell(`L${totalRow + 4}`).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFB0C4DE' }
+    };
+
+    worksheet.getCell(`J${totalRow + 8}`).value = "CAF moyenne";
+    worksheet.getCell(`J${totalRow + 8}`).font = { bold: true };
+    worksheet.getCell(`J${totalRow + 9}`).value = "18";
+    worksheet.getCell(`J${totalRow + 8}`).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFB0C4DE' }
+    };
+
+    worksheet.getCell(`K${totalRow + 8}`).value = "RQA/mois";
+    worksheet.getCell(`K${totalRow + 8}`).font = { bold: true };
+    worksheet.getCell(`K${totalRow + 9}`).value = "126";
+    worksheet.getCell(`K${totalRow + 8}`).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFB0C4DE' }
+    };
 
     worksheet.getRow(1).fill = {
       type: 'pattern',
@@ -138,7 +184,7 @@ async function exportExcel(req, res) {
     });
 
     const startRow = totalRow;
-    const endRow = totalRow + 5;
+    const endRow = totalRow + 9;
 
     // ✅ Ligne du haut
     ["J", "K", "L"].forEach(col => {
@@ -203,6 +249,15 @@ async function exportExcel(req, res) {
     worksheet2.getCell("H1").font = { bold: true };
     worksheet2.getColumn("H").width = 20;
     worksheet2.getCell("H2").value = { formula: `SUM(D2:D${data2.length + 1})`, result: 0 };
+
+    worksheet.getCell(`L${totalRow + 8}`).value = "Nb QA";
+    worksheet.getCell(`L${totalRow + 8}`).font = { bold: true };
+    worksheet.getCell(`L${totalRow + 9}`).value = { formula: `COUNTA(QAs!A2:QAs!A${data2.length + 1})`, result: 0 };
+    worksheet.getCell(`L${totalRow + 8}`).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFB0C4DE' }
+    };
 
     // ✅ style header (bonus pro)
     worksheet.getRow(1).font = { bold: true };
