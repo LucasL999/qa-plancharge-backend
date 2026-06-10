@@ -78,7 +78,7 @@ export const chantierService = {
     return result.rows; // retourne un tableau de QA
   },
 
-  async updateChantier(
+async updateChantier(
   id,
   priorite,
   statut,
@@ -95,13 +95,15 @@ export const chantierService = {
   try {
     await pool.query("BEGIN");
 
+    const STATUT_CLOS = "1"; // adapte si besoin
+
     // 🔎 récupérer titre
     const res = await pool.query(
       `SELECT titre FROM chantier WHERE id_chantier = $1`,
       [id]
     );
 
-    const titre = res.rows[0].titre;
+    const titre = res.rows[0]?.titre;
 
     // ✅ UPDATE chantier
     await pool.query(
@@ -132,7 +134,7 @@ export const chantierService = {
       ]
     );
 
-    // ✅ mise à jour affecter
+    // ✅ affectations
     await pool.query(
       `DELETE FROM affecter WHERE id_chantier = $1`,
       [id]
@@ -146,29 +148,26 @@ export const chantierService = {
       );
     }
 
-    // ✅ 🔥 logique alerte EXACTE DEMANDÉE
-    const STATUT_CLOS = "1"; // adapte si besoin
-    
+    // ✅ 🔥 NOUVELLE LOGIQUE ALERTE
+
     if (statut == STATUT_CLOS) {
+      // 👉 chantier clos = aucune alerte autorisée
       await pool.query(
         `DELETE FROM alerte WHERE id_chantier = $1`,
         [id]
       );
-      return;
-    }
 
+    } else {
+      // 👉 chantier non clos → logique normale
+      if (Number(cons) > Number(prev)) {
 
-    if (Number(cons) > Number(prev)) {
-      
-      // vérifier si alerte existe déjà
-      const check = await pool.query(
-        `SELECT 1 FROM alerte WHERE id_chantier = $1 LIMIT 1`,
-        [id]
-      );
+        const check = await pool.query(
+          `SELECT 1 FROM alerte WHERE id_chantier = $1 LIMIT 1`,
+          [id]
+        );
 
-      // si aucune alerte
-      if (check.rowCount === 0) {
-        await pool.query(
+        if (check.rowCount === 0) {
+          await pool.query(
             `INSERT INTO alerte (message, id_chantier)
              VALUES ($1, $2)`,
             [
@@ -176,12 +175,14 @@ export const chantierService = {
               id
             ]
           );
+        }
+
+      } else {
+        await pool.query(
+          `DELETE FROM alerte WHERE id_chantier = $1`,
+          [id]
+        );
       }
-    }else{
-      await pool.query(
-        `DELETE FROM alerte WHERE id_chantier = $1`,
-        [id]
-      );
     }
 
     await pool.query("COMMIT");
