@@ -263,6 +263,12 @@ async function exportExcel(req, res) {
     worksheet.getRow(1).font = { bold: true };
     worksheet2.getRow(1).font = { bold: true };
 
+    worksheet2.getRow(1).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFB0C4DE' }
+    };
+
     worksheet2.columns.forEach(col => {
       col.alignment = { horizontal: "center", vertical: "middle" };
     });
