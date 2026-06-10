@@ -26,8 +26,8 @@ async function getWorkingDays(start, end) {
     if (!isWeekend && !isHoliday) count++;
     current.setDate(current.getDate() + 1);
   }
-    
-  return count-1;
+
+  return count - 1;
 }
 
 async function exportExcel(req, res) {
@@ -104,22 +104,22 @@ async function exportExcel(req, res) {
     const lastRow = data.length + 1;
     const totalRow = lastRow + 3;
 
-    worksheet.getCell(`J${totalRow}`).value ="Charge globale";
+    worksheet.getCell(`J${totalRow}`).value = "Charge globale";
     worksheet.getCell(`J${totalRow}`).font = { bold: true };
     worksheet.getColumn("J").width = 20;
     worksheet.getCell(`J${totalRow + 1}`).value = { formula: `SUM(J2:J${data.length + 1})`, result: 0 };
 
-    worksheet.getCell(`K${totalRow}`).value ="Consommation globale";
+    worksheet.getCell(`K${totalRow}`).value = "Consommation globale";
     worksheet.getCell(`K${totalRow}`).font = { bold: true };
     worksheet.getColumn("K").width = 30;
     worksheet.getCell(`K${totalRow + 1}`).value = { formula: `SUM(K2:K${data.length + 1})`, result: 0 };
 
-    worksheet.getCell(`L${totalRow}`).value ="RAF global";
+    worksheet.getCell(`L${totalRow}`).value = "RAF global";
     worksheet.getCell(`L${totalRow}`).font = { bold: true };
     worksheet.getColumn("L").width = 20;
     worksheet.getCell(`L${totalRow + 1}`).value = { formula: `SUM(L2:L${data.length + 1})`, result: 0 };
 
-    worksheet.getCell(`K${totalRow + 4}`).value ="Total capacitaire";
+    worksheet.getCell(`K${totalRow + 4}`).value = "Total capacitaire";
     worksheet.getCell(`K${totalRow + 4}`).font = { bold: true };
     worksheet.getCell(`K${totalRow + 5}`).value = { formula: `QAs!H2`, result: 0 };
 
@@ -132,45 +132,45 @@ async function exportExcel(req, res) {
       pattern: 'solid',
       fgColor: { argb: 'FFB0C4DE' }
     };
-    
+
     worksheet.columns.forEach(col => {
       col.alignment = { horizontal: "center", vertical: "middle" };
     });
- 
-  const startRow = totalRow;
-  const endRow = totalRow + 5;
 
-  // ✅ Ligne du haut
-  ["J", "K", "L"].forEach(col => {
-    worksheet.getCell(`${col}${startRow}`).border = {
-      ...worksheet.getCell(`${col}${startRow}`).border,
-      top: { style: "medium" }
-    };
-  });
+    const startRow = totalRow;
+    const endRow = totalRow + 5;
 
-  // ✅ Ligne du bas
-  ["J", "K", "L"].forEach(col => {
-    worksheet.getCell(`${col}${endRow}`).border = {
-      ...worksheet.getCell(`${col}${endRow}`).border,
-      bottom: { style: "medium" }
-    };
-  });
+    // ✅ Ligne du haut
+    ["J", "K", "L"].forEach(col => {
+      worksheet.getCell(`${col}${startRow}`).border = {
+        ...worksheet.getCell(`${col}${startRow}`).border,
+        top: { style: "medium" }
+      };
+    });
 
-  // ✅ Colonne gauche (J)
-  for (let row = startRow; row <= endRow; row++) {
-    worksheet.getCell(`J${row}`).border = {
-      ...worksheet.getCell(`J${row}`).border,
-      left: { style: "medium" }
-    };
-  }
+    // ✅ Ligne du bas
+    ["J", "K", "L"].forEach(col => {
+      worksheet.getCell(`${col}${endRow}`).border = {
+        ...worksheet.getCell(`${col}${endRow}`).border,
+        bottom: { style: "medium" }
+      };
+    });
 
-  // ✅ Colonne droite (L)
-  for (let row = startRow; row <= endRow; row++) {
-    worksheet.getCell(`L${row}`).border = {
-      ...worksheet.getCell(`L${row}`).border,
-      right: { style: "medium" }
-    };
-  }
+    // ✅ Colonne gauche (J)
+    for (let row = startRow; row <= endRow; row++) {
+      worksheet.getCell(`J${row}`).border = {
+        ...worksheet.getCell(`J${row}`).border,
+        left: { style: "medium" }
+      };
+    }
+
+    // ✅ Colonne droite (L)
+    for (let row = startRow; row <= endRow; row++) {
+      worksheet.getCell(`L${row}`).border = {
+        ...worksheet.getCell(`L${row}`).border,
+        right: { style: "medium" }
+      };
+    }
 
 
 
@@ -199,7 +199,7 @@ async function exportExcel(req, res) {
       });
     });
 
-    worksheet2.getCell("H1").value ="Total capacitaire";
+    worksheet2.getCell("H1").value = "Total capacitaire";
     worksheet2.getCell("H1").font = { bold: true };
     worksheet2.getColumn("H").width = 20;
     worksheet2.getCell("H2").value = { formula: `SUM(D2:D${data2.length + 1})`, result: 0 };
@@ -207,7 +207,7 @@ async function exportExcel(req, res) {
     // ✅ style header (bonus pro)
     worksheet.getRow(1).font = { bold: true };
     worksheet2.getRow(1).font = { bold: true };
-    
+
     worksheet2.columns.forEach(col => {
       col.alignment = { horizontal: "center", vertical: "middle" };
     });
@@ -225,15 +225,15 @@ async function exportExcel(req, res) {
 
     // ✅ envoi Excel
     await workbook.xlsx.write(res);
-    
+
     res.end();
     console.log("✅ Excel généré et envoyé sans erreur");
-    
+
   } catch (err) {
     console.error("❌ Erreur export:", err);
-    
+
     if (!res.headersSent) {
-        res.status(500).json({ error: "Erreur serveur" });
+      res.status(500).json({ error: "Erreur serveur" });
     }
   }
 }

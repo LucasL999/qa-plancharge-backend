@@ -3,8 +3,8 @@ import pool from "../db/index.js";
 export const calendarService = {
   async addEvent(email, date_debut, date_fin) {
     const resultUser = await pool.query("SELECT id_user FROM users WHERE email = $1;", [email]);
-    if(resultUser.rows.length === 0){
-        throw new Error("Utilisateur introuvable");
+    if (resultUser.rows.length === 0) {
+      throw new Error("Utilisateur introuvable");
     }
     const idUser = resultUser.rows[0].id_user;
     const nbJours = Number((new Date(date_fin) - new Date(date_debut)) / (1000 * 60 * 60 * 24) + 1);
@@ -34,8 +34,8 @@ export const calendarService = {
 
   async deleteEvent(email, date_debut, date_fin) {
     const resultUser = await pool.query("SELECT id_user FROM users WHERE email = $1;", [email]);
-    if(resultUser.rows.length === 0){
-        throw new Error("Utilisateur introuvable");
+    if (resultUser.rows.length === 0) {
+      throw new Error("Utilisateur introuvable");
     }
     const idUser = resultUser.rows[0].id_user;
     const resultnbJours = await pool.query("SELECT (date_fin - date_debut) +1 AS nb_jours FROM events WHERE id_user = $1 AND (date_debut = $2 OR date_fin = $3)", [idUser, date_debut, date_fin]);

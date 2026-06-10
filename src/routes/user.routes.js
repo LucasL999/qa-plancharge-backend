@@ -8,26 +8,26 @@ const router = express.Router();
  * GET /api/me
  */
 router.get("/me", authMiddleware, async (req, res) => {
-  try {
-    const email = req.user.email;
+    try {
+        const email = req.user.email;
 
-    const user = await userService.findByEmail(email);
+        const user = await userService.findByEmail(email);
 
-    if (!user) {
-      return res.status(403).json({
-        error: "User not found in database"
-      });
+        if (!user) {
+            return res.status(403).json({
+                error: "User not found in database"
+            });
+        }
+
+        return res.json({
+            id: user.id,
+            email: user.email,
+            role: user.role
+        });
+    } catch (err) {
+        console.error("❌ /me error:", err);
+        return res.status(500).json({ error: "Internal server error" });
     }
-
-    return res.json({
-      id: user.id,
-      email: user.email,
-      role: user.role
-    });
-  } catch (err) {
-    console.error("❌ /me error:", err);
-    return res.status(500).json({ error: "Internal server error" });
-  }
 });
 
 /**
@@ -67,13 +67,13 @@ router.post("/users", authMiddleware, async (req, res) => {
         const user = await userService.addUser(nom, prenom, id_role, absences, email);
         res.status(201).json({ success: true, data: user });
     } catch (err) {
-        if(err.message === "EMAIL_ALREADY_EXISTS"){
+        if (err.message === "EMAIL_ALREADY_EXISTS") {
             return res.status(409).json({
                 error: "EMAIL_ALREADY_EXITS"
             });
-        } 
+        }
         console.error(err);
-        res.status(500).json({ error: "Erreur serveur"});
+        res.status(500).json({ error: "Erreur serveur" });
     }
 });
 

@@ -9,7 +9,7 @@ router.get("/exportExcel", authMiddleware, async (req, res) => {
         await exportExcel(req, res);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Erreur serveur"});
+        res.status(500).json({ error: "Erreur serveur" });
     }
 });
 

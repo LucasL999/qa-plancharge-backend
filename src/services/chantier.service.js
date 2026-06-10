@@ -6,9 +6,9 @@ export const chantierService = {
     return result.rows; // retourne un tableau de statuts id, libelle
   },
 
-  async getChantierPriority(){
-      const result = await pool.query("SELECT * FROM priorite ORDER BY libelle;");
-      return result.rows; // retourne un tableau de priorités id, libelle
+  async getChantierPriority() {
+    const result = await pool.query("SELECT * FROM priorite ORDER BY libelle;");
+    return result.rows; // retourne un tableau de priorités id, libelle
   },
 
   async getQA() {
@@ -18,17 +18,17 @@ export const chantierService = {
   },
 
   async addChantier(chantier, priorite, statut, qa, cp, financement, nature, capacite, prev, cons, debut, fin) {
-    
-    try{
+
+    try {
       await pool.query('BEGIN');
       const result = await pool.query(
         "INSERT INTO chantier (titre, id_statut, cp, date_debut, date_fin, prev, cons, finance, capacite, id_priorite, nature) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id_chantier"
         , [
-        
-        chantier, statut, cp, debut, fin, prev, cons, financement, capacite, priorite, nature]
+
+          chantier, statut, cp, debut, fin, prev, cons, financement, capacite, priorite, nature]
       );
       const idChantier = result.rows[0].id_chantier;
-      for (const idUser of qa){
+      for (const idUser of qa) {
         await pool.query(
           "INSERT INTO affecter (id_chantier, id_user) VALUES($1, $2) RETURNING *"
           , [idChantier, idUser]
@@ -36,7 +36,7 @@ export const chantierService = {
       }
       await pool.query('COMMIT');
       return idChantier;
-    }catch (error){
+    } catch (error) {
       await pool.query('ROLLBACK');
       throw error;
     }
@@ -78,36 +78,36 @@ export const chantierService = {
     return result.rows; // retourne un tableau de QA
   },
 
-async updateChantier(
-  id,
-  priorite,
-  statut,
-  qa,
-  cp,
-  financement,
-  nature,
-  capacite,
-  prev,
-  cons,
-  debut,
-  fin
-) {
-  try {
-    await pool.query("BEGIN");
+  async updateChantier(
+    id,
+    priorite,
+    statut,
+    qa,
+    cp,
+    financement,
+    nature,
+    capacite,
+    prev,
+    cons,
+    debut,
+    fin
+  ) {
+    try {
+      await pool.query("BEGIN");
 
-    const STATUT_CLOS = "1"; // adapte si besoin
+      const STATUT_CLOS = "1"; // adapte si besoin
 
-    // 🔎 récupérer titre
-    const res = await pool.query(
-      `SELECT titre FROM chantier WHERE id_chantier = $1`,
-      [id]
-    );
+      // 🔎 récupérer titre
+      const res = await pool.query(
+        `SELECT titre FROM chantier WHERE id_chantier = $1`,
+        [id]
+      );
 
-    const titre = res.rows[0]?.titre;
+      const titre = res.rows[0]?.titre;
 
-    // ✅ UPDATE chantier
-    await pool.query(
-      `UPDATE chantier SET 
+      // ✅ UPDATE chantier
+      await pool.query(
+        `UPDATE chantier SET 
         id_statut = $1,
         cp = $2,
         date_debut = $3,
@@ -119,98 +119,98 @@ async updateChantier(
         id_priorite = $9,
         nature = $10
       WHERE id_chantier = $11`,
-      [
-        statut,
-        cp,
-        debut,
-        fin,
-        prev,
-        cons,
-        financement,
-        capacite,
-        priorite,
-        nature,
-        id
-      ]
-    );
-
-    // ✅ affectations
-    await pool.query(
-      `DELETE FROM affecter WHERE id_chantier = $1`,
-      [id]
-    );
-
-    for (const idUser of qa) {
-      await pool.query(
-        `INSERT INTO affecter (id_chantier, id_user)
-         VALUES ($1, $2)`,
-        [id, idUser]
+        [
+          statut,
+          cp,
+          debut,
+          fin,
+          prev,
+          cons,
+          financement,
+          capacite,
+          priorite,
+          nature,
+          id
+        ]
       );
-    }
 
-    // ✅ 🔥 NOUVELLE LOGIQUE ALERTE
-
-    if (statut == STATUT_CLOS) {
-      // 👉 chantier clos = aucune alerte autorisée
+      // ✅ affectations
       await pool.query(
-        `DELETE FROM alerte WHERE id_chantier = $1`,
+        `DELETE FROM affecter WHERE id_chantier = $1`,
         [id]
       );
 
-    } else {
-      // 👉 chantier non clos → logique normale
-      if (Number(cons) > Number(prev)) {
-
-        const check = await pool.query(
-          `SELECT 1 FROM alerte WHERE id_chantier = $1 LIMIT 1`,
-          [id]
+      for (const idUser of qa) {
+        await pool.query(
+          `INSERT INTO affecter (id_chantier, id_user)
+         VALUES ($1, $2)`,
+          [id, idUser]
         );
+      }
 
-        if (check.rowCount === 0) {
-          await pool.query(
-            `INSERT INTO alerte (message, id_chantier)
-             VALUES ($1, $2)`,
-            [
-              `Dépassement JH sur le chantier : ${titre} (${cons}/${prev})`,
-              id
-            ]
-          );
-        }
+      // ✅ 🔥 NOUVELLE LOGIQUE ALERTE
 
-      } else {
+      if (statut == STATUT_CLOS) {
+        // 👉 chantier clos = aucune alerte autorisée
         await pool.query(
           `DELETE FROM alerte WHERE id_chantier = $1`,
           [id]
         );
+
+      } else {
+        // 👉 chantier non clos → logique normale
+        if (Number(cons) > Number(prev)) {
+
+          const check = await pool.query(
+            `SELECT 1 FROM alerte WHERE id_chantier = $1 LIMIT 1`,
+            [id]
+          );
+
+          if (check.rowCount === 0) {
+            await pool.query(
+              `INSERT INTO alerte (message, id_chantier)
+             VALUES ($1, $2)`,
+              [
+                `Dépassement JH sur le chantier : ${titre} (${cons}/${prev})`,
+                id
+              ]
+            );
+          }
+
+        } else {
+          await pool.query(
+            `DELETE FROM alerte WHERE id_chantier = $1`,
+            [id]
+          );
+        }
       }
+
+      await pool.query("COMMIT");
+      return id;
+
+    } catch (error) {
+      await pool.query("ROLLBACK");
+      throw error;
     }
-
-    await pool.query("COMMIT");
-    return id;
-
-  } catch (error) {
-    await pool.query("ROLLBACK");
-    throw error;
-  }
-},
-
-  async getPrev(){
-      const result = await pool.query("SELECT SUM(prev) FROM chantier;");
-      return result.rows; // retourne le total prev
   },
 
-  async getCons(){
-      const result = await pool.query("SELECT SUM(cons) FROM chantier;");
-      return result.rows; // retourne le total cons
+  async getPrev() {
+    const result = await pool.query("SELECT SUM(prev) FROM chantier;");
+    return result.rows; // retourne le total prev
   },
 
-  async getAlertes(){
-      const result = await pool.query("SELECT * FROM alerte;");
-      return result.rows; // retourne toutes les alertes
+  async getCons() {
+    const result = await pool.query("SELECT SUM(cons) FROM chantier;");
+    return result.rows; // retourne le total cons
   },
 
-  async getNbAlertes(){
-      const result = await pool.query("SELECT COUNT(*) FROM alerte;");
-      return result.rows; // retourne le nombre total d'alertes
+  async getAlertes() {
+    const result = await pool.query("SELECT * FROM alerte;");
+    return result.rows; // retourne toutes les alertes
+  },
+
+  async getNbAlertes() {
+    const result = await pool.query("SELECT COUNT(*) FROM alerte;");
+    return result.rows; // retourne le nombre total d'alertes
   }
 };

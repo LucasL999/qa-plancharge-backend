@@ -16,7 +16,7 @@ router.post("/addEvent", authMiddleware, async (req, res) => {
         res.status(201).json({ success: true, data: event });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Erreur serveur"});
+        res.status(500).json({ error: "Erreur serveur" });
     }
 });
 
@@ -32,7 +32,7 @@ router.get("/events", authMiddleware, async (req, res) => {
         res.status(201).json({ success: true, data: event });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Erreur serveur"});
+        res.status(500).json({ error: "Erreur serveur" });
     }
 });
 
@@ -43,7 +43,7 @@ router.get("/eventsOther", authMiddleware, async (req, res) => {
         res.status(201).json({ success: true, data: event });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Erreur serveur"});
+        res.status(500).json({ error: "Erreur serveur" });
     }
 });
 
@@ -59,7 +59,7 @@ router.delete("/deleteEvent", authMiddleware, async (req, res) => {
         res.status(201).json({ success: true, data: deleteEvent });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Erreur serveur"});
+        res.status(500).json({ error: "Erreur serveur" });
     }
 });
 

@@ -10,7 +10,7 @@ export function authMiddleware(req, res, next) {
   const token = header.split(" ")[1];
 
   try {
-    const decoded = jwt.decode(token); 
+    const decoded = jwt.decode(token);
     // ⚠️ idéalement jwt.verify avec clé publique Keycloak en prod
 
     if (!decoded) {
