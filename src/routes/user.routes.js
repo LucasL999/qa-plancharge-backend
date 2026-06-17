@@ -22,7 +22,9 @@ router.get("/me", authMiddleware, async (req, res) => {
         return res.json({
             id: user.id,
             email: user.email,
-            role: user.role
+            role: user.role,
+            nom: user.name,
+            prenom: user.firstname,
         });
     } catch (err) {
         console.error("❌ /me error:", err);
