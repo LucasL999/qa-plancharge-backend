@@ -66,8 +66,8 @@ export const chantierService = {
         )
       ) FILTER (WHERE u.id_user IS NOT NULL) AS qas
       FROM chantier c
-      JOIN statut s ON c.id_statut = s.id_statut
-      JOIN priorite p ON c.id_priorite = p.id_priorite
+      LEFT JOIN statut s ON c.id_statut = s.id_statut
+      LEFT JOIN priorite p ON c.id_priorite = p.id_priorite
       LEFT JOIN affecter a ON c.id_chantier = a.id_chantier
       LEFT JOIN users u ON a.id_user = u.id_user
       GROUP BY
@@ -179,7 +179,7 @@ export const chantierService = {
 
         } else {
           await pool.query(
-            `DELETE FROM alerte WHERE id_chantier = $1`,
+            `UPDATE alerte SET active = false WHERE id_chantier = $1 AND active = true;`,
             [id]
           );
         }
@@ -205,12 +205,17 @@ export const chantierService = {
   },
 
   async getAlertes() {
-    const result = await pool.query("SELECT * FROM alerte;");
+    const result = await pool.query("SELECT * FROM alerte WHERE active = true ORDER BY datecreation DESC;");
+    return result.rows; // retourne toutes les alertes
+  },
+
+  async getHistorique() {
+    const result = await pool.query("SELECT * FROM alerte WHERE active = false AND datecreation >= CURRENT_DATE - INTERVAL '3 month' ORDER BY datecreation DESC;");
     return result.rows; // retourne toutes les alertes
   },
 
   async getNbAlertes() {
-    const result = await pool.query("SELECT COUNT(*) FROM alerte;");
+    const result = await pool.query("SELECT COUNT(*) FROM alerte WHERE active = true;");
     return result.rows; // retourne le nombre total d'alertes
   }
 };

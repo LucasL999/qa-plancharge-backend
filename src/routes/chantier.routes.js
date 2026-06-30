@@ -126,6 +126,19 @@ router.get("/alertes", authMiddleware, async (req, res) => {
 });
 
 /**
+ * GET /api/historique
+ */
+router.get("/historique", authMiddleware, async (req, res) => {
+    try {
+        const result = await chantierService.getHistorique();
+        res.json(result);
+    } catch (error) {
+        console.error("Error fetching Historique:", error);
+        res.status(500).json({ error: "Failed to fetch Historique" });
+    }
+});
+
+/**
  * GET /api/Nbalertes
  */
 router.get("/Nbalertes", authMiddleware, async (req, res) => {

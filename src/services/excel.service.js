@@ -139,7 +139,7 @@ async function exportExcel(req, res) {
 
     worksheet.getCell(`J${totalRow + 4}`).value = "Delta";
     worksheet.getCell(`J${totalRow + 4}`).font = { bold: true };
-    worksheet.getCell(`J${totalRow + 5}`).value = { formula: `K${totalRow + 5} - L${totalRow + 1}`, result: 0 };
+    worksheet.getCell(`J${totalRow + 5}`).value = { formula: `L${totalRow + 5} - L${totalRow + 1}`, result: 0 };
     worksheet.getCell(`J${totalRow + 4}`).fill = {
       type: 'pattern',
       pattern: 'solid',
