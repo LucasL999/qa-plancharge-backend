@@ -217,5 +217,10 @@ export const chantierService = {
   async getNbAlertes() {
     const result = await pool.query("SELECT COUNT(*) FROM alerte WHERE active = true;");
     return result.rows; // retourne le nombre total d'alertes
-  }
+  },
+
+  async deleteChantier(id) {
+    const result = await pool.query("DELETE FROM chantier WHERE id_chantier = $1;", [id]);
+    return result;
+  },
 };

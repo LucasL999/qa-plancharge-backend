@@ -151,6 +151,18 @@ router.get("/Nbalertes", authMiddleware, async (req, res) => {
     }
 });
 
+/**
+ * DELETE /api/deleteChantier
+ */
+router.delete("/deleteChantier/:id", authMiddleware, async (req, res) => {
+    try {
+        const result = await chantierService.deleteChantier(req.params.id);
+        res.json(result);
+    } catch (error) {
+        console.error("Error deleting chantier:", error);
+        res.status(500).json({ error: "Failed to delete chantier" });
+    }
+});
 
 
 export default router;
