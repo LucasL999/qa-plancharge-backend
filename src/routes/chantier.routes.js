@@ -53,7 +53,7 @@ router.post("/chantier", authMiddleware, async (req, res) => {
         res.status(201).json({ success: true, data: result });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Erreur serveur"});
+        res.status(500).json({ error: "Erreur serveur" });
     }
 });
 
@@ -78,7 +78,7 @@ router.get("/getChantier", authMiddleware, async (req, res) => {
 router.put("/updateChantier", authMiddleware, async (req, res) => {
     try {
         const { id, priorite, statut, qa, cp, financement, nature, capacite, prev, cons, debut, fin } = req.body;
-        const result = await chantierService.updateChantier( id, priorite, statut, qa, cp, financement, nature, capacite, prev, cons, debut, fin);
+        const result = await chantierService.updateChantier(id, priorite, statut, qa, cp, financement, nature, capacite, prev, cons, debut, fin);
         res.status(200).json({ success: true, data: result });
     } catch (error) {
         console.error("Error updating chantier:", error);
@@ -164,5 +164,42 @@ router.delete("/deleteChantier/:id", authMiddleware, async (req, res) => {
     }
 });
 
+/**
+ * GET /api/NbChantierEncours
+ */
+router.get("/NbChantierEncours", authMiddleware, async (req, res) => {
+    try {
+        const result = await chantierService.getNbChantierEncours();
+        res.json(result);
+    } catch (error) {
+        console.error("Error fetching Nb Chantiers En Cours:", error);
+        res.status(500).json({ error: "Failed to fetch Nb Chantiers En Cours" });
+    }
+});
+
+router.post("/import", authMiddleware, async (req, res) => {
+    try {
+        const { titre } = req.body;
+        const result = await chantierService.importChantier(titre);
+
+        res.status(201).json({
+            success: true,
+            data: result
+        });
+
+    } catch (err) {
+        console.error("ERREUR IMPORT :", err);
+
+        if (err.message.includes("existe déjà")) {
+            return res.status(409).json({
+                error: err.message
+            });
+        }
+
+        res.status(500).json({
+            error: err.message
+        });
+    }
+});
 
 export default router;

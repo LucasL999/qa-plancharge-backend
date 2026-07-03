@@ -223,4 +223,29 @@ export const chantierService = {
     const result = await pool.query("DELETE FROM chantier WHERE id_chantier = $1;", [id]);
     return result;
   },
+
+  async getNbChantierEncours() {
+    const result = await pool.query("SELECT COUNT(*) FROM chantier WHERE id_statut = 2;");
+    return result.rows; // retourne le nombre total de chantiers en cours
+  },
+
+  async importChantier(titre) {
+    // Vérifie si le chantier existe déjà
+    const existing = await pool.query(
+      "SELECT id_chantier FROM chantier WHERE titre = $1",
+      [titre]
+    );
+
+    if (existing.rows.length > 0) {
+      throw new Error("Un chantier avec ce titre existe déjà.");
+    }
+
+    // Insertion si le titre n'existe pas
+    const result = await pool.query(
+      "INSERT INTO chantier(titre) VALUES($1) RETURNING *",
+      [titre]
+    );
+
+    return result.rows[0];
+  },
 };
