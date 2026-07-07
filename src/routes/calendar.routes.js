@@ -48,15 +48,31 @@ router.get("/eventsOther", authMiddleware, async (req, res) => {
 });
 
 /**
+ * PUT /api/updateEvent
+ * UPDATE event
+ */
+router.put("/updateEvent", authMiddleware, async (req, res) => {
+    try {
+        const email = req.user.email;
+        const { id_event, date_debut, date_fin } = req.body;
+        const event = await calendarService.updateEvent(email, id_event, date_debut, date_fin);
+        res.status(200).json({ success: true, data: event });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+/**
  * DELETE /api/deleteEvent
  * DELETE event
  */
 router.delete("/deleteEvent", authMiddleware, async (req, res) => {
     try {
         const email = req.user.email;
-        const { date_debut, date_fin } = req.body;
-        const deleteEvent = await calendarService.deleteEvent(email, date_debut, date_fin);
-        res.status(201).json({ success: true, data: deleteEvent });
+        const { id_event } = req.body;
+        const deleteEvent = await calendarService.deleteEvent(email, id_event);
+        res.status(200).json({ success: true, data: deleteEvent });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Erreur serveur" });
